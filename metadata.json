@@ -1,0 +1,6 @@
+{
+  "name": "Calcora - Modern Precision Calculator",
+  "description": "An elegant, modern calculator with advanced BODMAS expression parsing, history tracking, light/dark themes, and keyboard support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

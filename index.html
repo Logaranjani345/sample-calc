@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calcora — Modern Precision Calculator</title>
+    <meta
+      name="description"
+      content="An elegant, modern calculator with advanced BODMAS expression parsing, history tracking, light/dark themes, and keyboard support."
+    />
+    <meta property="og:title" content="Calcora — Modern Precision Calculator" />
+    <meta
+      property="og:description"
+      content="An elegant, modern calculator with advanced BODMAS expression parsing, history tracking, light/dark themes, and keyboard support."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- Ambient glowing backdrop orbs -->
+    <div class="bg-ambient-orb orb-1" aria-hidden="true"></div>
+    <div class="bg-ambient-orb orb-2" aria-hidden="true"></div>
+
+    <div class="calc-wrapper">
+      <!-- 1. Header with App Name & Action Controls -->
+      <header class="calc-header">
+        <div class="brand-section">
+          <div class="brand-icon-box" aria-hidden="true">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="4" y="2" width="16" height="20" rx="3"></rect>
+              <line x1="8" y1="6" x2="16" y2="6"></line>
+              <line x1="16" y1="14" x2="16" y2="18"></line>
+              <path d="M16 10h.01"></path>
+              <path d="M12 10h.01"></path>
+              <path d="M8 10h.01"></path>
+              <path d="M12 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 18h.01"></path>
+              <path d="M8 18h.01"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">Calcora</h1>
+            <p class="brand-tagline">Precision Math</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <!-- Audio click sound toggle -->
+          <button
+            id="sound-toggle-btn"
+            class="icon-btn"
+            title="Toggle click sound"
+            aria-label="Toggle click sound"
+          >
+            <!-- Speaker On SVG -->
+            <svg
+              id="sound-icon-on"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <!-- Speaker Muted SVG -->
+            <svg
+              id="sound-icon-off"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+
+          <!-- History panel toggle button -->
+          <button
+            id="toggle-history-btn"
+            class="icon-btn"
+            title="Calculation History"
+            aria-label="Toggle calculation history"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="history-badge" class="history-badge hidden">0</span>
+          </button>
+
+          <!-- Theme toggle button (Light / Dark) -->
+          <button
+            id="theme-toggle-btn"
+            class="icon-btn"
+            title="Toggle Light/Dark Theme"
+            aria-label="Toggle light or dark theme"
+          >
+            <!-- Moon Icon (shown in light mode) -->
+            <svg
+              id="theme-icon-dark"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <!-- Sun Icon (shown in dark mode) -->
+            <svg
+              id="theme-icon-light"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none"
+            >
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- 2. Main Layout (Calculator Card + History Drawer/Panel) -->
+      <main class="main-stage">
+        <!-- Centered Calculator Card -->
+        <div class="calculator-card" role="region" aria-label="Calculator Interface">
+          <!-- Display Area -->
+          <div class="display-container">
+            <div class="display-top-bar">
+              <span class="badge-mode">BODMAS Standard</span>
+              <button
+                id="copy-result-btn"
+                class="copy-btn"
+                title="Copy result"
+                aria-label="Copy result to clipboard"
+              >
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copy</span>
+              </button>
+              <div id="copy-tooltip" class="copy-tooltip">Copied!</div>
+            </div>
+
+            <!-- Current Expression line -->
+            <div class="expression-wrapper">
+              <span
+                id="expression-display"
+                class="expression-text"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <!-- Evaluated Result / Current Input line -->
+            <div
+              class="result-wrapper"
+              title="Click to copy result"
+              role="button"
+              tabindex="0"
+              aria-label="Current result display. Click to copy."
+            >
+              <span
+                id="result-display"
+                class="result-text"
+                aria-live="assertive"
+                >0</span
+              >
+            </div>
+          </div>
+
+          <!-- Keypad Grid (6 rows × 4 columns) -->
+          <div
+            id="calc-keypad"
+            class="keypad-grid"
+            role="grid"
+            aria-label="Calculator keypad"
+          >
+            <!-- Row 1: Clear, Delete, Parentheses -->
+            <button
+              class="btn btn-action btn-clear"
+              data-action="clear"
+              aria-label="Clear all input"
+            >
+              AC
+            </button>
+            <button
+              class="btn btn-action"
+              data-action="delete"
+              aria-label="Delete last digit"
+            >
+              DEL
+            </button>
+            <button
+              class="btn btn-action"
+              data-action="paren-open"
+              aria-label="Open parenthesis"
+            >
+              (
+            </button>
+            <button
+              class="btn btn-action"
+              data-action="paren-close"
+              aria-label="Close parenthesis"
+            >
+              )
+            </button>
+
+            <!-- Row 2: Percent, Negate, Division, Multiplication -->
+            <button
+              class="btn btn-action"
+              data-action="percent"
+              aria-label="Percentage"
+            >
+              %
+            </button>
+            <button
+              class="btn btn-action"
+              data-action="negate"
+              aria-label="Toggle positive or negative sign"
+            >
+              +/−
+            </button>
+            <button
+              class="btn btn-op"
+              data-action="operator"
+              data-value="÷"
+              aria-label="Divide"
+            >
+              ÷
+            </button>
+            <button
+              class="btn btn-op"
+              data-action="operator"
+              data-value="×"
+              aria-label="Multiply"
+            >
+              ×
+            </button>
+
+            <!-- Row 3: 7, 8, 9, Subtraction -->
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="7"
+              aria-label="7"
+            >
+              7
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="8"
+              aria-label="8"
+            >
+              8
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="9"
+              aria-label="9"
+            >
+              9
+            </button>
+            <button
+              class="btn btn-op"
+              data-action="operator"
+              data-value="−"
+              aria-label="Subtract"
+            >
+              −
+            </button>
+
+            <!-- Row 4: 4, 5, 6, Addition -->
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="4"
+              aria-label="4"
+            >
+              4
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="5"
+              aria-label="5"
+            >
+              5
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="6"
+              aria-label="6"
+            >
+              6
+            </button>
+            <button
+              class="btn btn-op"
+              data-action="operator"
+              data-value="+"
+              aria-label="Add"
+            >
+              +
+            </button>
+
+            <!-- Row 5: 1, 2, 3, Equals (spans 2 rows) -->
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="1"
+              aria-label="1"
+            >
+              1
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="2"
+              aria-label="2"
+            >
+              2
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="number"
+              data-value="3"
+              aria-label="3"
+            >
+              3
+            </button>
+            <button
+              class="btn btn-equals"
+              data-action="equals"
+              aria-label="Calculate equals"
+            >
+              =
+            </button>
+
+            <!-- Row 6: 0 (spans 2 cols), Decimal point -->
+            <button
+              class="btn btn-num btn-zero"
+              data-action="number"
+              data-value="0"
+              aria-label="0"
+            >
+              0
+            </button>
+            <button
+              class="btn btn-num"
+              data-action="decimal"
+              aria-label="Decimal point"
+            >
+              .
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible / Side-by-side Calculation History Panel -->
+        <aside
+          id="history-panel"
+          class="history-panel collapsed"
+          aria-label="Calculation History"
+        >
+          <div class="history-header">
+            <div class="history-title-wrap">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>History</span>
+            </div>
+            <div class="history-actions">
+              <button
+                id="clear-history-btn"
+                class="btn-text"
+                title="Clear all history"
+                aria-label="Clear history"
+              >
+                Clear
+              </button>
+              <button
+                id="close-history-btn"
+                class="icon-btn"
+                style="width: 28px; height: 28px"
+                title="Close history"
+                aria-label="Close history panel"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="history-list"
+            class="history-list"
+            role="region"
+            aria-live="polite"
+          >
+            <!-- Dynamically populated history entries -->
+          </div>
+        </aside>
+      </main>
+
+      <!-- Keyboard shortcuts helper row -->
+      <div class="keyboard-hints" aria-hidden="true">
+        <span>Shortcuts:</span>
+        <span class="key-badge">0-9</span>
+        <span class="key-badge">+ − × ÷</span>
+        <span class="key-badge">Enter =</span>
+        <span class="key-badge">Backspace</span>
+        <span class="key-badge">Esc (AC)</span>
+        <span class="key-badge">( )</span>
+        <span class="key-badge">%</span>
+      </div>
+
+      <!-- 3. Small Footer -->
+      <footer class="calc-footer">
+        <span>Designed with precision.</span>
+        <span class="dot"></span>
+        <span>Calcora v2.0</span>
+      </footer>
+    </div>
+
+    <!-- Vanilla Script -->
+    <script src="./script.js" defer></script>
+  </body>
+</html>
